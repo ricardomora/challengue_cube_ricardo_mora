@@ -70,13 +70,20 @@
 
 
 			<div class="col-md-4">
+				
+				  @if (count($errors) > 0)
+                        @include('error.deserror')
+                    @endif
+
+
 				<form class="form-signin" method="POST" novalidate >
 				<input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<h3>Data input</h3>
 			        <div class="form-group ">
 						<textarea class="form-control" rows="12" id="text-in" name="text-in" value=""></textarea>
 					</div>
-		        	<button class="btn btn-lg btn-primary btn-block " type="submit">Submit cube</button>
+		        	<button class="btn btn-lg btn-primary " type="submit">Submit cube</button>
+		        	<button class="btn btn-lg btn-danger " type="submit">Reset cube</button>
 	        	</form>
 
 				<h3>Data Output </h3>

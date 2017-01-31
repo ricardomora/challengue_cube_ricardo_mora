@@ -10,5 +10,13 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/',  'cubeController@index');
-Route::post('/', 'cubeController@create');
+Route::get('/', array(
+	'as' => 'cube-index',
+	'uses' => 'cubeController@index',
+));
+
+
+Route::post('/', array(
+	'as' => 'cube-create',
+	'uses' => 'cubeController@create',
+));
