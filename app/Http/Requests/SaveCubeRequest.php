@@ -77,7 +77,7 @@ class SaveCubeRequest
                 break;
             case 5:
                 $this->arraymessages=array();
-                $this->arraymessages['0.required']='Error. testcases #'.$line.' - operation '.$operation;
+                $this->arraymessages['0.required']='Error. Operation required #'.$line.' - operation '.$operation;
                 $this->arraymessages['0.in']='Error. testcases #'.$line.' - operation '.$operation.'. The operation should start with UPDATE.';
 
                 $this->arraymessages['1.required']='Error. testcases #'.$line.' - operation '.$operation;
