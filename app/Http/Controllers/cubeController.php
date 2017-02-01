@@ -11,21 +11,19 @@ use Validator;
 
 class cubeController extends Controller {
 
-    var $numOper;
-    var $numtest;
-    var $line;
-    var $cube;
-    var $result;
     var $n;
     var $m;
+    var $t;
+
+    var $cube;
+    var $result;
+
+
 
     public function __construct() {
-        $this->numtest = 0;
-        $this->numOper = 0;
-        $this->line = array();
-
         $this->n = 0;
         $this->m = 0;
+        $this->t = 0;
 
         $this->cube = new Cube();
         $this->result = array();
@@ -36,141 +34,160 @@ class cubeController extends Controller {
         return view('cube.index', array('result' => null));
     }
 
-    public function show() {
-
-        return view('cube.result');
-    }
-
     public function store(Request $request) {
         $line = explode("\r\n", $request['text-in']);
-        $t = 0;
+        $numLine = 0;
+        $command = explode(" ", $line[$numLine]);
 
-        foreach ($line as $valueArray) {
-            $command = explode(" ", $valueArray);
-            $this->line = $command;
+        $numTotalTest = $command[0];
+        $typeCommand = \Config::get('constants.command.create_test');
+       
+        $res= $this->validateLineByType($command, $typeCommand);
+        if (!empty($res)) { return $res; }
 
-            switch (count($command)) {
-                case "1":
-                    if ($t == 0) {
-                        $t = $command[0];
-                        $test = $this->imputValidator(1);
-                        if ($test) {
-                            return $test;
-                        };
-                    }
-                    break;
-                case "2":
+        for ($numTest=1; $numTest <= $numTotalTest ; $numTest++) {
+            $numLine++;
+            
+            if (isset($line[$numLine])){
+                $command = explode(" ", $line[$numLine]);
+                $typeCommand = \Config::get('constants.command.create_cube');
 
-                    $this->n = $command[0];
-                    $this->m = $command[1];
+                if (count($command) == $typeCommand){
+                    
+                    $res= $this->createCube($command);
+                    if (!empty($res)) { return $res; } 
+                    
+                    for ($numOpe=1; $numOpe <= $this->m ; $numOpe++) { 
+                        $numLine++;
+                        
+                        if (isset($line[$numLine])){
+                            $command = explode(" ", $line[$numLine]);
+                            $typeUpdate = \Config::get('constants.command.update'); 
+                            $typeQuery = \Config::get('constants.command.query'); 
 
-                    $this->numtest++;
-                    $this->numOper = 0;
+                            if(count($command) ==  $typeUpdate || count($command) == $typeQuery ){
+                                
+                                if(count($command) ==  $typeUpdate){
+                                    $res = $this->commandUpdate($command , $numTest , $numOpe );
+                                }
 
-                    $test = $this->imputValidator(2);
-                    if ($test) {
-                        return $test;
-                    } else {
-                        $this->cube->inicializarCube($this->n);
-                    };
+                                if(count($command) == $typeQuery){
+                                    $res = $this->commandQuery($command ,  $numTest , $numOpe );
+                                }
 
-                    break;
-                case "5":
+                                if (!empty($res)) { return $res; } 
 
-                    if ($this->numOper < $this->m) {
-                        $x = $command[1];
-                        $y = $command[2];
-                        $z = $command[3];
-                        $value = $command[4];
-                        $this->numOper++;
+                            }else{
+                                $message = 'Error. Unknown command Line #'. $numLine . ' review format query or update';
+                                $res = $this->manualError($message);
+                                if (!empty($res)) { return $res; } 
+                            }
 
-                        $test = $this->imputValidator(5, $this->n);
-                        if ($test) {
-                            return $test;
-                        } else {
-                            $this->cube->updateBloque($x, $y, $z, $value);
+                        }else{
+                            $message = 'Error. Line #'. ($numLine + 1 ) . ' you must enter Query or Update test case #'. $numTest . ' operation #'. $numOpe;
+                            $res = $this->manualError($message);
+                            if (!empty($res)) { return $res; }
                         }
                     }
-
-                    break;
-                case '7':
-                    if ($this->numOper < $this->m) {
-                        $x1 = $command[1];
-                        $y1 = $command[2];
-                        $z1 = $command[3];
-                        $x2 = $command[4];
-                        $y2 = $command[5];
-                        $z2 = $command[6];
-
-                        $this->numOper++;
-                        $test = $this->imputValidator(7, $this->n, $x1, $y1, $z1, $x2, $y2, $z2);
-                        if ($test) {
-                            return $test;
-                        } else {
-                            $query = $this->cube->sumatoria($x1, $y1, $z1, $x2, $y2, $z2);
-                            array_push($this->result, "QUERY $x1 $y1 $z1 $x2 $y2 $z2 = " . $query);
-                        }
-                    }
-                    break;
-                default:
-                    $this->line = array();
-                    $messages = ['required' => 'Error. Unknown command'];
-                    $validator = Validator::make($this->line, ['required',], $messages);
-                    if ($validator->fails()) {
-                        $errors = $validator->errors();
-                        return redirect()->route('cube-index')->with('errors', $errors);
-                    }
-
-                    break;
+                }else{
+                    $message = 'Error. Line #'. $numLine . ' review format N y M';
+                    $res = $this->manualError($message);
+                    if (!empty($res)) { return $res; }
+                }
+            }else{
+                $message = 'Error. line #' . ($numLine + 1 ) . ' you must enter N M values test case #'. $numTest;
+                $res = $this->manualError($message);
+                if (!empty($res)) { return $res; }
             }
         }
 
-        if ($this->numOper < $this->m) {
-            $this->numOper++;
-            $this->line = array();
-
-            $messages = ['required' => 'Error. Operation required, testcase #' . $this->numtest . ' - operation ' . $this->numOper,];
-            $validator = Validator::make($this->line, ['required',], $messages);
-
-            if ($validator->fails()) {
-                $errors = $validator->errors();
-                return redirect()->route('cube-index')->with('errors', $errors);
-            }
-        }
-
-        if ($this->numtest < $t) {
-            $this->numtest++;
-            $this->line = array();
-
-            $messages = ['required' => 'Error. testcase required  #' . $this->numtest];
-            $validator = Validator::make($this->line, ['required',], $messages);
-
-            if ($validator->fails()) {
-                $errors = $validator->errors();
-                return redirect()->route('cube-index')->with('errors', $errors);
-            }
-        }
 
         return view('cube.index', [ 'result' => $this->result, 'textold' => $request['text-in']]);
     }
 
-    private function createMatriz() {
-        
+    private function createCube(array $command) {
+
+        $this->n = $command[0];
+        $this->m = $command[1];
+
+        $typeCommand = \Config::get('constants.command.create_cube');
+        $test = $this->validateLineByType($command, $typeCommand);
+      
+        if ($test) {
+            return $test;
+        } else {
+            $this->cube->inicializarCube($this->n);
+        };
+        return null;
     }
 
-    private function imputValidator($opc, $n = 0, $x1 = 0, $y1 = 0, $z1 = 0, $x2 = 0, $y2 = 0, $z2 = 0) {
+    private function commandUpdate(array $command, $numTest , $numOpe) {
+
+
+            $x = $command[1];
+            $y = $command[2];
+            $z = $command[3];
+            $value = $command[4];
+
+            $typeCommand = \Config::get('constants.command.update');
+            $test = $this->validateLineByType($command, $typeCommand, $numTest , $numOpe, $this->n);
+            if ($test) {
+                return $test;
+            } else {
+                $this->cube->updateBloque($x, $y, $z, $value);
+            }
+        
+        return null;
+    }
+
+    private function commandQuery(array $command, $numTest , $numOpe) {
+   
+     
+            $x1 = $command[1];
+            $y1 = $command[2];
+            $z1 = $command[3];
+            $x2 = $command[4];
+            $y2 = $command[5];
+            $z2 = $command[6];
+
+            $typeCommand = \Config::get('constants.command.query');
+
+            $test = $this->validateLineByType($command, $typeCommand, $numTest , $numOpe, $this->n, $x1, $y1, $z1, $x2, $y2, $z2);
+            if ($test) {
+                return $test;
+            } else {
+                $query = $this->cube->sumatoria($x1, $y1, $z1, $x2, $y2, $z2);
+                array_push($this->result, "QUERY $x1 $y1 $z1 $x2 $y2 $z2 = " . $query);
+            }
+        
+        return null;
+    }
+
+    private function validateLineByType($command, $opc, $numtest = 0, $numOper = 0 , $n = 0, $x1 = 0, $y1 = 0, $z1 = 0, $x2 = 0, $y2 = 0, $z2 = 0) {
+
         $textrequest = new SaveCubeRequest();
 
         $rules = $textrequest->rules($opc, $n, $x1, $y1, $z1, $x2, $y2, $z2);
-        $messages = $textrequest->messages($opc, $this->numtest, $this->numOper);
-        $validator = Validator::make($this->line, $rules, $messages);
+        $messages = $textrequest->messages($opc, $numtest, $numOper);
+        $validator = Validator::make($command, $rules, $messages);
 
         if ($validator->fails()) {
             $errors = $validator->errors();
             return redirect()->route('cube-index')->with('errors', $errors);
         }
 
-        return false;
+        return null;
+    }
+
+    private function manualError($message) {
+        $command = array();
+        $messages = ['required' => $message,];
+        $validator = Validator::make($command, ['required',], $messages);
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return redirect()->route('cube-index')->with('errors', $errors);
+        }
+        return null;
     }
 
 }

@@ -1,40 +1,33 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+Challengue Cube Ricardo Mora
+Repositorio que contiene la implementación en Laravel del reto planteado en https://www.hackerrank.com/challenges/cube-summation 
+Capas de la Aplicación
+Modelo
+Cube.php: Clase encargada de la creación, procesamiento (actualizaciones y consultas) y almacenamiento del cubo.
+Controlador
+CubeController.php: Controlador encargado de procesar las peticiones del usuario, contiene la lógica de la solución de problema, usa la clase Cube.php.
+Vista
+Template.blade.php: Plantilla de la aplicación contiene los estilos y dependencias.
+Index.blade.php: Ventana creada con el fin de generar al usuario una vista amigable y uso de la aplicación.
+deserror.blade.php: Sección creada para desplegar los mensajes de error resultante de las validaciones.
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Code Refactoring
+Luego de observar la implementación del código observe varias malas prácticas y realice las siguientes correcciones:
+El valor Input::get('driver_id') es usado múltiples veces, lo mejor es declarar la variable  $idDriver = Input::get('driver_id');
+Variables en español y en inglés, se debe mantener uno solo, el más común es el inglés $servicio por $service
+Se puede usar !empty() en vez de != null y es más legible.
+La documentación del código debe estar al inicio del método, donde se puede especificar los parámetros de entrada de la función y la respuesta esperada, no dentro del código ya que el mismo debería ser entendible por sí mismo.
+No se debería tener código comentado, ni variables de error como el helper de laravel dd() al pasar a producción.
+Se creó una nueva función para la lógica del envío de las notificaciones, para separarla de método que realiza la confirmación del servicio, debido a que ejecutan acciones diferentes, y se podría invocar desde otro método que requiera enviar notificaciones reusando el dodigo.
+El código refactorizado lo puede encontrar en la siguiente ruta del proyecto 
+/app/Http/Controllers/DriverController.php
 
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
-
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+Preguntas
+1)	¿En qué consiste el principio de Responsabilidad única? ¿Cuál es su propósito?
+	
+Este principio se refiere a que una clase, método u objeto debe tener una y solo una única función, esto nos ayuda en cierto forma proteger el código frente a los cambios ya que solo debería haber un motivo  para modificar una clase o método, si  un método o clase contiene muchas funciones aumentaremos las razones para modificarlos.
+2)	¿Qué características debe tiene según tu opinión código "bueno"  o código limpio?
+En mi opinión un código limpio debe tener las siguientes características:
+•	Debe ser legible y expresar su función u objetivo al verlo.
+•	Mantener los estándares globales para el desarrollo de aplicaciones, usar patrones de diseño, todo esto con la finalidad de que cualquier persona con los conocimientos pueda entenderlo.
+•	Debe ser conciso y sin redundancias.
+•	Fácil de mantener y editar

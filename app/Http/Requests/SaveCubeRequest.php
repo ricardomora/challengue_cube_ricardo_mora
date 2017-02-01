@@ -14,24 +14,30 @@ class SaveCubeRequest
         return false;
     }
 
+
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
         public function rules($cases,$n=0,$x1=0,$y1=0,$z1=0,$x2=0,$y2=0,$z2=0)
-    {        
+    {   
+        $test = \Config::get('constants.command.create_test');
+        $cube = \Config::get('constants.command.create_cube');
+        $update = \Config::get('constants.command.update');
+        $query = \Config::get('constants.command.query');
+
         switch ($cases) {
-            case 1:  
+            case $test:  
                 $this->arrayrules=array();
                 array_push($this->arrayrules,'required|numeric|between:1,50'); 
                 break;
-            case 2:
+            case $cube:
                 $this->arrayrules=array();
                 array_push($this->arrayrules,'required|numeric|between:1,100');
                 array_push($this->arrayrules,'required|numeric|between:1,1000');
                 break;
-            case 5:
+            case $update:
                 $this->arrayrules=array();
                 array_push($this->arrayrules,'required|in:UPDATE');
                 array_push($this->arrayrules,'required|numeric|between:1,'.$n.'');
@@ -40,7 +46,7 @@ class SaveCubeRequest
                 array_push($this->arrayrules,'required|numeric|between:-1000000000,1000000000');
 
                 break;
-            case 7:
+            case $query:
                 $this->arrayrules=array();
                 array_push($this->arrayrules,'required|in:QUERY');
                 array_push($this->arrayrules,'required|numeric|between:1,'.$x2.'|max:'.$n.'');
@@ -58,14 +64,19 @@ class SaveCubeRequest
 
         public function messages($cases,$line=null,$operation=null)
     {
+        $test = \Config::get('constants.command.create_test');
+        $cube = \Config::get('constants.command.create_cube');
+        $update = \Config::get('constants.command.update');
+        $query = \Config::get('constants.command.query');
+
         switch ($cases) {
-            case 1:
+            case $test:
                 $this->arraymessages=array();
                 $this->arraymessages['0.required']='Error. You must enter the number of test cases (T)';
                 $this->arraymessages['0.numeric']='Error. The variable T must be a number';
                 $this->arraymessages['0.between']='Error. The variable T must be between 1 and 50';
                 break;
-            case 2:
+            case $cube:
                 $this->arraymessages=array();
                 $this->arraymessages['0.required']='Error. testcases #'.$line.', You must enter the matriz size (N).';
                 $this->arraymessages['0.numeric']='Error. testcases #'.$line.', The variable N must be a number.';
@@ -75,7 +86,7 @@ class SaveCubeRequest
                 $this->arraymessages['1.numeric']='Error. testcases #'.$line.', The variable M must be a number.';
                 $this->arraymessages['1.between']='Error. testcases #'.$line.', The variable M must be between 1 and 1000';
                 break;
-            case 5:
+            case $update:
                 $this->arraymessages=array();
                 $this->arraymessages['0.required']='Error. Operation required #'.$line.' - operation '.$operation;
                 $this->arraymessages['0.in']='Error. testcases #'.$line.' - operation '.$operation.'. The operation should start with UPDATE.';
@@ -97,7 +108,7 @@ class SaveCubeRequest
                 $this->arraymessages['4.between']='Error. testcases #'.$line.' - operation '.$operation.', The variable W must be between -1000000000 and 1000000000.';
 
                 break;
-            case 7:
+            case $query:
                 $this->arraymessages=array();
                 $this->arraymessages['0.required']='Error. testcases #'.$line.' - operation '.$operation;
                 $this->arraymessages['0.in']='Error. testcases #'.$line.' - operation '.$operation.', The operation should start with QUERY.';
