@@ -4,23 +4,29 @@ Repositorio que contiene la implementación en Laravel del reto planteado en htt
 
 ##Capas de la Aplicación
 
-Modelo
--Cube.php: Clase encargada de la creación, procesamiento (actualizaciones y consultas) y almacenamiento del cubo.
+###Modelo
 
-Controlador
--CubeController.php: Controlador encargado de procesar las peticiones del usuario, contiene la lógica de la solución del problema, usa la clase Cube.php.
--saveCube.php: archivo para crear las reglas y mensajes personalizados, que se usaran para validar la informacion enviada por el usuario.
+ - Cube.php: Clase encargada de la creación, procesamiento (actualizaciones y consultas) y almacenamiento del cubo.
 
--Vista
-Template.blade.php: Plantilla de la aplicación contiene los estilos y dependencias.
-Index.blade.php: Ventana creada con el fin de generar al usuario una vista amigable y uso de la aplicación.
-deserror.blade.php: Sección creada para desplegar los mensajes de error resultante de las validaciones.
+###Controlador
 
--Config
-Constants.php: Para guardar las variables globales propias de la aplicación.
+- CubeController.php: Controlador encargado de procesar las peticiones del usuario, contiene la lógica de la solución del problema, usa la clase Cube.php.
+- saveCube.php: archivo para crear las reglas y mensajes personalizados, que se usaran para validar la informacion enviada por el usuario.
 
--Test
-cubeTest.php: archivo donde se guardan las pruebas unitarias que certifican el funcionamiento de la aplicación.
+###Vista
+
+- Template.blade.php: Plantilla de la aplicación contiene los estilos y dependencias.
+- Index.blade.php: Ventana creada con el fin de generar al usuario una vista amigable y uso de la aplicación.
+- deserror.blade.php: Sección creada para desplegar los mensajes de error resultante de las validaciones.
+- ggff
+
+###Config
+
+- Constants.php: Para guardar las variables globales propias de la aplicación.
+
+###Test case
+
+- cubeTest.php: archivo donde se guardan las pruebas unitarias que certifican el funcionamiento de la aplicación.
 
 ##Code Refactoring
 Luego de observar la implementación del código observe varias malas prácticas y realice las siguientes correcciones:
