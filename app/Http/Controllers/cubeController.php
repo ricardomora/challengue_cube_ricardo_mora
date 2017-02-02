@@ -35,7 +35,12 @@ class cubeController extends Controller {
     }
 
     public function store(Request $request) {
-        $line = explode("\r\n", $request['text-in']);
+     
+        $data = $request['text-in'];
+        $data = preg_replace('/\r\n/', "\n", $data);
+        $data = preg_replace('/\r/', "\n", $data);
+        $line = explode("\n", $data);
+     
         $numLine = 0;
         $command = explode(" ", $line[$numLine]);
 

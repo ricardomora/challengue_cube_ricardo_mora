@@ -10,7 +10,6 @@
     </div>
 
     <div class="page">
-
         <div class="col-md-8">
             <h3>Instructions</h3><hr>
             <div class="panel" style="text-align: left">
