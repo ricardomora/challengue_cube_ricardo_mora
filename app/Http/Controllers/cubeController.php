@@ -178,7 +178,7 @@ class cubeController extends Controller {
 
         if ($validator->fails()) {
             $errors = $validator->errors();
-            return redirect()->route('cube-index')->with('errors', $errors);
+            return redirect()->route('cube-index')->withInput()->with('errors', $errors);
         }
 
         return null;
@@ -190,7 +190,7 @@ class cubeController extends Controller {
         $validator = Validator::make($command, ['required',], $messages);
         if ($validator->fails()) {
             $errors = $validator->errors();
-            return redirect()->route('cube-index')->with('errors', $errors);
+            return redirect()->route('cube-index')->withInput()->with('errors', $errors);
         }
         return null;
     }

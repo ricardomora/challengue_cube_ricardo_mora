@@ -79,7 +79,7 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <h3>Data input</h3>
                 <div class="form-group ">
-                    <textarea class="form-control" rows="12" id="text-in" name="text-in" value="" {{ !empty($textold) ? 'disabled' : '' }}>{{ !empty($textold) ? $textold : "" }}</textarea>
+                    <textarea class="form-control" rows="12" id="text-in" name="text-in" value="" {{ !empty($textold) ? 'disabled' : '' }}>{{ !empty($textold) ? $textold : old('text-in') }}</textarea>
                 </div>
                 <button class="btn btn-lg btn-primary " type="submit" style="display:{{ !empty($textold) ? 'none' : '' }}">Submit cube</button>
 

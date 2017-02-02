@@ -9,6 +9,7 @@ Modelo
 
 Controlador
 -CubeController.php: Controlador encargado de procesar las peticiones del usuario, contiene la lógica de la solución del problema, usa la clase Cube.php.
+-saveCube.php: archivo para crear las reglas y mensajes personalizados, que se usaran para validar la informacion enviada por el usuario.
 
 -Vista
 Template.blade.php: Plantilla de la aplicación contiene los estilos y dependencias.
