@@ -18,7 +18,6 @@ Repositorio que contiene la implementación en Laravel del reto planteado en htt
 - Template.blade.php: Plantilla de la aplicación contiene los estilos y dependencias.
 - Index.blade.php: Ventana creada con el fin de generar al usuario una vista amigable y uso de la aplicación.
 - deserror.blade.php: Sección creada para desplegar los mensajes de error resultante de las validaciones.
-- ggff
 
 ###Config
 
